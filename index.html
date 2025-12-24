@@ -41,7 +41,6 @@
             cursor: pointer;
         }
 
-        /* 全体を左右に分けるコンテナ */
         .main-layout {
             display: flex;
             width: 90vw;
@@ -57,7 +56,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: flex-start; /* 左寄せ */
+            align-items: flex-start;
             position: relative;
             z-index: 10;
             animation: float 6s ease-in-out infinite;
@@ -72,7 +71,7 @@
             display: flex;
             gap: 1vw;
             opacity: 0.9;
-            padding-left: 0.5vw; /* 微調整 */
+            padding-left: 0.5vw;
         }
 
         .day-highlight {
@@ -88,7 +87,7 @@
         }
 
         .time-section {
-            font-size: 16vw; /* サイズ調整 */
+            font-size: 16vw;
             font-weight: 800;
             letter-spacing: -0.04em;
             color: var(--ink-black);
@@ -105,7 +104,7 @@
         }
 
         .seconds {
-            font-size: 6vw; /* サイズ調整 */
+            font-size: 6vw;
             font-weight: 600;
             color: var(--slate-gray);
             margin-left: 1.5vw;
@@ -115,13 +114,13 @@
 
         /* --- 右側：天気エリア (40%) --- */
         .weather-container {
-            width: 35%; /* 余白を見て少し小さめに */
+            width: 35%;
             display: flex;
             flex-direction: column;
-            align-items: center; /* 中央寄せ */
+            align-items: center;
             justify-content: center;
             padding-left: 2vw;
-            border-left: 2px solid rgba(0,0,0,0.05); /* 区切り線 */
+            border-left: 2px solid rgba(0,0,0,0.05);
             color: var(--ink-black);
             animation: fadeIn 2s ease-out;
         }
@@ -141,14 +140,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            /* アイコンのはみ出しを許容して影が切れないようにする */
+            overflow: visible; 
         }
         
-        /* 天気アイコンSVGのスタイル */
         .weather-svg {
             width: 100%;
             height: 100%;
             fill: var(--ink-black);
             filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+            /* はみ出し防止のため少しパディングを入れる */
+            padding: 5%;
         }
 
         .weather-temp {
@@ -171,13 +173,13 @@
         }
         
         .weather-desc {
-            font-family: 'Noto Sans JP', sans-serif;
+            font-family: 'Poppins', 'Noto Sans JP', sans-serif;
             font-size: 1.5vw;
             margin-top: 1vh;
-            font-weight: 700;
+            font-weight: 600;
+            text-transform: capitalize;
         }
 
-        /* 下部のプログレスバー */
         .progress-bar-container {
             position: absolute;
             bottom: 0;
@@ -222,7 +224,6 @@
     <div id="hint" class="hint-text">TAP TO FULLSCREEN</div>
 
     <div class="main-layout">
-        <!-- 左側：時計 -->
         <div class="clock-container">
             <div class="date-section">
                 <span id="date">LOADING</span>
@@ -239,11 +240,9 @@
             </div>
         </div>
 
-        <!-- 右側：天気 (新潟県新発田市 -> 下越) -->
         <div class="weather-container">
             <div class="weather-location">SHIBATA, NIIGATA</div>
             <div class="weather-icon-box" id="weather-icon">
-                <!-- SVGがここに挿入されます -->
                 <span style="font-size:2vw; opacity:0.5;">...</span>
             </div>
             <div class="weather-temp">
@@ -259,7 +258,6 @@
     </div>
 
     <script>
-        // --- PWA設定 ---
         function setupManifest() {
             const iconData = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f4f4f4'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%231a1a1a' stroke-width='40'/%3E%3Cline x1='256' y1='256' x2='256' y2='100' stroke='%231a1a1a' stroke-width='30' stroke-linecap='round'/%3E%3Cline x1='256' y1='256' x2='380' y2='256' stroke='%23666666' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='20' fill='%231a1a1a'/%3E%3C/svg%3E";
             const manifest = {
@@ -285,7 +283,6 @@
             }
         }
 
-        // --- 時計処理 ---
         function updateClock() {
             const now = new Date();
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -310,38 +307,48 @@
             document.getElementById('progress').style.width = `${progressPercent}%`;
         }
 
-        // --- 天気予報処理 (気象庁API) ---
-        // 新潟県コード: 150000, 下越エリアコード: 150010
-        const JMA_URL = "https://www.jma.go.jp/bosai/forecast/data/forecast/150000.json";
+        const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=37.9485&longitude=139.3297&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo";
 
-        // シンプルなSVGアイコンデータ
+        /* 
+           修正点: viewBoxをすべて "-10 -10 84 84" に広げて余白を作成。
+           これにより、座標が多少マイナスにはみ出ても（Rainなど）、表示範囲内に収まります。
+        */
+        const viewboxSetting = "-10 -10 84 84";
+
         const icons = {
-            sun: `<svg class="weather-svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="14" stroke="currentColor" stroke-width="4" fill="none"/><path d="M32 6V12 M32 52V58 M58 32H52 M12 32H6 M50.4 13.6L46.1 17.9 M17.9 46.1L13.6 50.4 M50.4 50.4L46.1 46.1 M17.9 17.9L13.6 13.6" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
-            cloud: `<svg class="weather-svg" viewBox="0 0 64 64"><path d="M16 46H48C55.7 46 62 39.7 62 32C62 24.3 55.7 18 48 18C47.1 18 46.2 18.1 45.4 18.3C43.5 10.4 36.4 4.5 28 4.5C18.1 4.5 10 12.6 10 22.5C10 23.3 10.1 24 10.2 24.8C5.2 26.2 1.5 30.8 1.5 36.2C1.5 41.6 5.9 46 11.3 46H16Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/></svg>`,
-            rain: `<svg class="weather-svg" viewBox="0 0 64 64"><path d="M16 40H48C55.7 40 62 33.7 62 26C62 18.3 55.7 12 48 12C47.1 12 46.2 12.1 45.4 12.3C43.5 4.4 36.4 -1.5 28 -1.5C18.1 -1.5 10 6.6 10 16.5C10 17.3 10.1 18 10.2 18.8C5.2 20.2 1.5 24.8 1.5 30.2C1.5 35.6 5.9 40 11.3 40H16Z" fill="none" stroke="currentColor" stroke-width="4"/><path d="M22 48L18 58 M32 48L28 58 M42 48L38 58" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
-            snow: `<svg class="weather-svg" viewBox="0 0 64 64"><path d="M32 12V52 M14 22L50 42 M14 42L50 22" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="2" fill="currentColor"/></svg>`
+            sun: `<svg class="weather-svg" viewBox="${viewboxSetting}"><circle cx="32" cy="32" r="14" stroke="currentColor" stroke-width="4" fill="none"/><path d="M32 6V12 M32 52V58 M58 32H52 M12 32H6 M50.4 13.6L46.1 17.9 M17.9 46.1L13.6 50.4 M50.4 50.4L46.1 46.1 M17.9 17.9L13.6 13.6" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
+            cloud: `<svg class="weather-svg" viewBox="${viewboxSetting}"><path d="M16 46H48C55.7 46 62 39.7 62 32C62 24.3 55.7 18 48 18C47.1 18 46.2 18.1 45.4 18.3C43.5 10.4 36.4 4.5 28 4.5C18.1 4.5 10 12.6 10 22.5C10 23.3 10.1 24 10.2 24.8C5.2 26.2 1.5 30.8 1.5 36.2C1.5 41.6 5.9 46 11.3 46H16Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/></svg>`,
+            rain: `<svg class="weather-svg" viewBox="${viewboxSetting}"><path d="M16 40H48C55.7 40 62 33.7 62 26C62 18.3 55.7 12 48 12C47.1 12 46.2 12.1 45.4 12.3C43.5 4.4 36.4 -1.5 28 -1.5C18.1 -1.5 10 6.6 10 16.5C10 17.3 10.1 18 10.2 18.8C5.2 20.2 1.5 24.8 1.5 30.2C1.5 35.6 5.9 40 11.3 40H16Z" fill="none" stroke="currentColor" stroke-width="4"/><path d="M22 48L18 58 M32 48L28 58 M42 48L38 58" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
+            snow: `<svg class="weather-svg" viewBox="${viewboxSetting}"><path d="M32 12V52 M14 22L50 42 M14 42L50 22" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="32" r="2" fill="currentColor"/></svg>`,
+            thunder: `<svg class="weather-svg" viewBox="${viewboxSetting}"><path d="M16 40H48C55.7 40 62 33.7 62 26C62 18.3 55.7 12 48 12C47.1 12 46.2 12.1 45.4 12.3C43.5 4.4 36.4 -1.5 28 -1.5C18.1 -1.5 10 6.6 10 16.5C10 17.3 10.1 18 10.2 18.8C5.2 20.2 1.5 24.8 1.5 30.2C1.5 35.6 5.9 40 11.3 40H16Z" fill="none" stroke="currentColor" stroke-width="4"/><path d="M34 38L26 50H36L30 62" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/></svg>`
         };
+
+        function getWeatherDetails(code) {
+            if (code === 0) return { text: "Clear Sky", icon: icons.sun };
+            if (code <= 3) return { text: "Cloudy", icon: icons.cloud };
+            if (code <= 48) return { text: "Fog", icon: icons.cloud };
+            if (code <= 67) return { text: "Rain", icon: icons.rain };
+            if (code <= 77) return { text: "Snow", icon: icons.snow };
+            if (code <= 82) return { text: "Showers", icon: icons.rain };
+            if (code <= 99) return { text: "Thunderstorm", icon: icons.thunder };
+            return { text: "Unknown", icon: icons.cloud };
+        }
 
         async function fetchWeather() {
             try {
-                const response = await fetch(JMA_URL);
+                const response = await fetch(API_URL);
                 const data = await response.json();
-                
-                // 新潟県の下越エリア (150010) を探す
-                // 1つ目のデータ群(forecasts[0])が天気概況
-                const forecastArea = data[0].timeSeries[0].areas.find(a => a.area.code === "150010");
-                const weatherCode = forecastArea.weatherCodes[0]; // 今日の天気コード
-                const weatherText = forecastArea.weathers[0].replace(/\s+/g, ''); // "くもり　所により　雨" -> "くもり所により雨"
+                const daily = data.daily;
+                const todayMax = Math.round(daily.temperature_2m_max[0]);
+                const todayMin = Math.round(daily.temperature_2m_min[0]);
+                const weatherCode = daily.weathercode[0];
 
-                // 2つ目のデータ群(forecasts[1])が気温 (0:新潟, 1:長岡, 2:高田, 3:相川 ... 新発田はないので新潟(150010の代表)を使う)
-                // 正確には「新潟」観測所のデータを使います
-                const tempArea = data[0].timeSeries[2].areas.find(a => a.area.code === "150010"); 
-                // 気象庁JSONは朝取得すると「今日の最低」がない場合があるため、nullチェックが必要
-                let maxT = tempArea.temps[1] || tempArea.temps[0] || "--"; 
-                let minT = tempArea.temps[0] !== maxT ? tempArea.temps[0] : "--"; // 簡易ロジック
+                const details = getWeatherDetails(weatherCode);
 
-                // 表示更新
-                updateWeatherUI(weatherCode, maxT, minT, weatherText);
+                document.getElementById('weather-icon').innerHTML = details.icon;
+                document.getElementById('temp-max').textContent = todayMax + "°";
+                document.getElementById('temp-min').textContent = todayMin + "°";
+                document.getElementById('weather-text').textContent = details.text;
                 
             } catch (e) {
                 console.error("Weather fetch failed", e);
@@ -349,32 +356,11 @@
             }
         }
 
-        function updateWeatherUI(code, max, min, text) {
-            const iconBox = document.getElementById('weather-icon');
-            const c = parseInt(code);
-            let svg = icons.cloud; // デフォルト
-
-            // 天気コード簡易判定
-            if (code === '100' || code === '101' || (c >= 123 && c <= 139)) svg = icons.sun; // 晴れ系
-            else if (c >= 200 && c <= 299) svg = icons.cloud; // 曇り系
-            else if (c >= 300 && c <= 399) svg = icons.rain; // 雨系
-            else if (c >= 400) svg = icons.snow; // 雪系
-
-            iconBox.innerHTML = svg;
-            document.getElementById('temp-max').textContent = max + "°";
-            document.getElementById('temp-min').textContent = min !== "--" ? min + "°" : "/";
-            
-            // 日本語の天気概況を少し短くする（「くもり　所により　雨」など長いので）
-            const shortText = text.split('　')[0].split('所により')[0]; 
-            document.getElementById('weather-text').textContent = shortText;
-        }
-
-        // 初期化
         setupManifest();
         setInterval(updateClock, 30);
         updateClock();
-        fetchWeather(); // 初回実行
-        setInterval(fetchWeather, 1800000); // 30分ごとに更新
+        fetchWeather();
+        setInterval(fetchWeather, 1800000); 
     </script>
 </body>
 </html>
