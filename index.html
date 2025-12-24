@@ -22,6 +22,7 @@
             --ink-black: #1a1a1a;
             --slate-gray: #666666;
             --soft-gray: #e0e0e0;
+            --border-color: rgba(0,0,0,0.08);
         }
 
         * { box-sizing: border-box; }
@@ -50,20 +51,32 @@
             justify-content: space-between;
         }
 
-        /* --- 左側：時計エリア (60%) --- */
+        /* --- 時計エリア (45%) --- */
+        /* 幅を少し減らし、右側にパディングを入れて線との接触を防ぐ */
         .clock-container {
-            width: 60%;
+            width: 45%; 
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center; 
             position: relative;
             z-index: 10;
+            padding-right: 2vw; /* 右側に余白を確保 */
             animation: float 6s ease-in-out infinite;
         }
 
+        .clock-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            /* 幅いっぱい使わず、文字サイズに合わせて自然に */
+            width: fit-content; 
+        }
+
         .date-section {
-            font-size: 2vw;
+            /* 日付も少し小さく調整 */
+            font-size: 1.5vw; 
             font-weight: 300;
             letter-spacing: 0.15em;
             color: var(--slate-gray);
@@ -87,7 +100,8 @@
         }
 
         .time-section {
-            font-size: 16vw;
+            /* 時計のフォントサイズを 16vw -> 13vw に縮小してはみ出し防止 */
+            font-size: 13vw; 
             font-weight: 800;
             letter-spacing: -0.04em;
             color: var(--ink-black);
@@ -100,84 +114,140 @@
         .separator {
             opacity: 0.15;
             margin: 0 0.4vw; 
-            transform: translateY(-1.2vw);
+            transform: translateY(-1.0vw);
         }
 
         .seconds {
-            font-size: 6vw;
+            /* 秒数もバランスを見て縮小 6vw -> 4.5vw */
+            font-size: 4.5vw; 
             font-weight: 600;
             color: var(--slate-gray);
-            margin-left: 1.5vw;
+            margin-left: 1.2vw;
             font-variant-numeric: tabular-nums;
             opacity: 0.8;
         }
 
-        /* --- 右側：天気エリア (40%) --- */
+        /* --- 天気エリア (55%) --- */
+        /* 天気エリアを広くとる */
         .weather-container {
-            width: 35%;
+            width: 55%; 
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            padding-left: 2vw;
-            border-left: 2px solid rgba(0,0,0,0.05);
+            padding-left: 4vw; 
+            border-left: 2px solid var(--border-color); 
             color: var(--ink-black);
             animation: fadeIn 2s ease-out;
         }
 
         .weather-location {
-            font-size: 1.2vw;
+            font-size: 1.5vw; 
             letter-spacing: 0.2em;
             color: var(--slate-gray);
-            margin-bottom: 2vh;
+            margin-bottom: 3vh;
             text-transform: uppercase;
+            font-weight: 600;
         }
 
-        .weather-icon-box {
-            width: 10vw;
-            height: 10vw;
-            margin-bottom: 1vh;
+        .weather-row {
             display: flex;
-            justify-content: center;
             align-items: center;
-            /* アイコンのはみ出しを許容して影が切れないようにする */
-            overflow: visible; 
+            justify-content: flex-start;
+            gap: 3vw; 
         }
-        
+
+        /* === 現在の天気（特大） === */
+        .current-group {
+            display: flex;
+            align-items: center;
+            gap: 1.5vw;
+        }
+
+        .current-icon {
+            width: 12vw; 
+            height: 12vw;
+            padding: 2%; 
+        }
+
+        .current-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .current-temp {
+            font-size: 9vw;
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.05em;
+        }
+
+        .current-desc {
+            font-size: 1.5vw;
+            font-weight: 600;
+            color: var(--slate-gray);
+            text-transform: capitalize;
+            margin-top: 1vh;
+        }
+
+        /* 縦の区切り線 */
+        .weather-vertical-divider {
+            width: 2px;
+            height: 10vw; 
+            background: var(--border-color);
+        }
+
+        /* === 明日の天気（中） === */
+        .tomorrow-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            opacity: 0.9;
+        }
+
+        .tomorrow-label {
+            font-size: 1vw;
+            color: var(--slate-gray);
+            letter-spacing: 0.15em;
+            font-weight: 600;
+            margin-bottom: 0.8vh;
+        }
+
+        .tomorrow-content {
+            display: flex;
+            align-items: center;
+            gap: 1vw;
+        }
+
+        .tomorrow-icon {
+            width: 5vw;
+            height: 5vw;
+            padding: 2%;
+        }
+
+        .tomorrow-temp-stack {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+            margin-left: 0.5vw;
+        }
+
+        .tomorrow-max {
+            font-size: 2.2vw;
+            font-weight: 700;
+        }
+
+        .tomorrow-min {
+            font-size: 1.8vw;
+            color: var(--slate-gray);
+            font-weight: 400;
+        }
+
         .weather-svg {
             width: 100%;
             height: 100%;
             fill: var(--ink-black);
             filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
-            /* はみ出し防止のため少しパディングを入れる */
-            padding: 5%;
-        }
-
-        .weather-temp {
-            display: flex;
-            align-items: baseline;
-            gap: 1.5vw;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .temp-high {
-            font-size: 5vw;
-            font-weight: 800;
-        }
-
-        .temp-low {
-            font-size: 3vw;
-            font-weight: 600;
-            color: var(--slate-gray);
-            opacity: 0.7;
-        }
-        
-        .weather-desc {
-            font-family: 'Poppins', 'Noto Sans JP', sans-serif;
-            font-size: 1.5vw;
-            margin-top: 1vh;
-            font-weight: 600;
-            text-transform: capitalize;
         }
 
         .progress-bar-container {
@@ -224,32 +294,58 @@
     <div id="hint" class="hint-text">TAP TO FULLSCREEN</div>
 
     <div class="main-layout">
+        <!-- 左側：時計 -->
         <div class="clock-container">
-            <div class="date-section">
-                <span id="date">LOADING</span>
-                <span id="day" class="day-highlight"></span>
-            </div>
-
-            <div class="time-wrapper">
-                <div class="time-section">
-                    <span id="hours">00</span>
-                    <span class="separator">:</span>
-                    <span id="minutes">00</span>
+            <div class="clock-content-wrapper">
+                <div class="date-section">
+                    <span id="date">LOADING</span>
+                    <span id="day" class="day-highlight"></span>
                 </div>
-                <div class="seconds" id="seconds">00</div>
+
+                <div class="time-wrapper">
+                    <div class="time-section">
+                        <span id="hours">00</span>
+                        <span class="separator">:</span>
+                        <span id="minutes">00</span>
+                    </div>
+                    <div class="seconds" id="seconds">00</div>
+                </div>
             </div>
         </div>
 
+        <!-- 右側：天気 (巨大化) -->
         <div class="weather-container">
             <div class="weather-location">SHIBATA, NIIGATA</div>
-            <div class="weather-icon-box" id="weather-icon">
-                <span style="font-size:2vw; opacity:0.5;">...</span>
+
+            <div class="weather-row">
+                
+                <!-- 現在 (特大) -->
+                <div class="current-group">
+                    <div class="current-icon" id="current-icon">
+                        <span style="opacity:0.2">...</span>
+                    </div>
+                    <div class="current-info">
+                        <div class="current-temp" id="current-temp">--°</div>
+                        <div class="current-desc" id="current-desc">Loading</div>
+                    </div>
+                </div>
+
+                <!-- 縦の区切り線 -->
+                <div class="weather-vertical-divider"></div>
+
+                <!-- 明日 (中サイズ) -->
+                <div class="tomorrow-group">
+                    <div class="tomorrow-label">TOMORROW</div>
+                    <div class="tomorrow-content">
+                        <div class="tomorrow-icon" id="tomorrow-icon"></div>
+                        <div class="tomorrow-temp-stack">
+                            <span class="tomorrow-max" id="tomorrow-max">--°</span>
+                            <span class="tomorrow-min" id="tomorrow-min">--°</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div class="weather-temp">
-                <span class="temp-high" id="temp-max">--</span>
-                <span class="temp-low" id="temp-min">--</span>
-            </div>
-            <div class="weather-desc" id="weather-text">Loading</div>
         </div>
     </div>
 
@@ -307,14 +403,9 @@
             document.getElementById('progress').style.width = `${progressPercent}%`;
         }
 
-        const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=37.9485&longitude=139.3297&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo";
+        const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=37.9485&longitude=139.3297&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo&forecast_days=2";
 
-        /* 
-           修正点: viewBoxをすべて "-10 -10 84 84" に広げて余白を作成。
-           これにより、座標が多少マイナスにはみ出ても（Rainなど）、表示範囲内に収まります。
-        */
         const viewboxSetting = "-10 -10 84 84";
-
         const icons = {
             sun: `<svg class="weather-svg" viewBox="${viewboxSetting}"><circle cx="32" cy="32" r="14" stroke="currentColor" stroke-width="4" fill="none"/><path d="M32 6V12 M32 52V58 M58 32H52 M12 32H6 M50.4 13.6L46.1 17.9 M17.9 46.1L13.6 50.4 M50.4 50.4L46.1 46.1 M17.9 17.9L13.6 13.6" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>`,
             cloud: `<svg class="weather-svg" viewBox="${viewboxSetting}"><path d="M16 46H48C55.7 46 62 39.7 62 32C62 24.3 55.7 18 48 18C47.1 18 46.2 18.1 45.4 18.3C43.5 10.4 36.4 4.5 28 4.5C18.1 4.5 10 12.6 10 22.5C10 23.3 10.1 24 10.2 24.8C5.2 26.2 1.5 30.8 1.5 36.2C1.5 41.6 5.9 46 11.3 46H16Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/></svg>`,
@@ -338,21 +429,29 @@
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
+
+                const current = data.current;
+                const currentTemp = Math.round(current.temperature_2m);
+                const currentCode = current.weather_code;
+                const currentDetails = getWeatherDetails(currentCode);
+
                 const daily = data.daily;
-                const todayMax = Math.round(daily.temperature_2m_max[0]);
-                const todayMin = Math.round(daily.temperature_2m_min[0]);
-                const weatherCode = daily.weathercode[0];
+                const tmrMax = Math.round(daily.temperature_2m_max[1]);
+                const tmrMin = Math.round(daily.temperature_2m_min[1]);
+                const tmrCode = daily.weather_code[1];
+                const tmrDetails = getWeatherDetails(tmrCode);
 
-                const details = getWeatherDetails(weatherCode);
+                document.getElementById('current-icon').innerHTML = currentDetails.icon;
+                document.getElementById('current-temp').textContent = currentTemp + "°";
+                document.getElementById('current-desc').textContent = currentDetails.text;
 
-                document.getElementById('weather-icon').innerHTML = details.icon;
-                document.getElementById('temp-max').textContent = todayMax + "°";
-                document.getElementById('temp-min').textContent = todayMin + "°";
-                document.getElementById('weather-text').textContent = details.text;
+                document.getElementById('tomorrow-icon').innerHTML = tmrDetails.icon;
+                document.getElementById('tomorrow-max').textContent = tmrMax + "°";
+                document.getElementById('tomorrow-min').textContent = tmrMin + "°";
                 
             } catch (e) {
                 console.error("Weather fetch failed", e);
-                document.getElementById('weather-text').textContent = "Offline";
+                document.getElementById('current-desc').textContent = "Offline";
             }
         }
 
