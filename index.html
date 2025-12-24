@@ -44,16 +44,16 @@
 
         .main-layout {
             display: flex;
-            width: 92vw; /* 画面幅いっぱい使う */
+            width: 94vw; /* 画面を広く使う */
             height: 100vh;
             margin: 0 auto;
             align-items: center;
             justify-content: space-between;
         }
 
-        /* === 左側：時計エリア (45%) === */
+        /* === 左側：時計エリア (65%) === */
         .clock-container {
-            width: 45%; 
+            width: 64%; /* 余白調整のため少し引く */
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -68,10 +68,11 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
+            /* 中央寄せしつつ、中身は左揃え */
         }
 
         .date-section {
-            font-size: 1.5vw; 
+            font-size: 2vw; 
             font-weight: 500;
             letter-spacing: 0.1em;
             color: var(--slate-gray);
@@ -95,7 +96,8 @@
         }
 
         .time-section {
-            font-size: 14vw; 
+            /* 領域が広がったので文字サイズを特大に */
+            font-size: 22vw; 
             font-weight: 800;
             letter-spacing: -0.05em;
             color: var(--ink-black);
@@ -107,12 +109,12 @@
 
         .separator {
             opacity: 0.15;
-            margin: 0 0.4vw; 
-            transform: translateY(-1.2vw);
+            margin: 0 0.5vw; 
+            transform: translateY(-2vw);
         }
 
         .seconds {
-            font-size: 5vw; 
+            font-size: 6vw; 
             font-weight: 600;
             color: var(--slate-gray);
             margin-left: 1.5vw;
@@ -120,15 +122,15 @@
             opacity: 0.8;
         }
 
-        /* === 右側：天気エリア (55%) === */
+        /* === 右側：天気エリア (35%) === */
         .weather-container {
-            width: 55%; 
-            height: 70%; /* 上下の余白を持たせる */
+            width: 35%; 
+            height: 70%; 
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* 上部と下部を離す */
-            padding-left: 4vw; 
-            border-left: 3px solid var(--ink-black); /* 手書き風の太い線をイメージして濃く太く */
+            justify-content: space-between; 
+            padding-left: 3vw; 
+            border-left: 3px solid var(--ink-black);
             color: var(--ink-black);
             animation: fadeIn 2s ease-out;
         }
@@ -138,14 +140,14 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            gap: 3vw;
+            gap: 1vw; /* 狭まったので少し詰める */
             height: 50%;
         }
 
         .current-icon {
-            width: 11vw;
-            height: 11vw;
-            padding: 2%;
+            width: 10vw; /* 少しサイズ調整 */
+            height: 10vw;
+            padding: 1%;
         }
 
         .current-details {
@@ -156,7 +158,7 @@
         }
 
         .location-name {
-            font-size: 1.2vw;
+            font-size: 1vw;
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
@@ -166,11 +168,11 @@
         .temp-row {
             display: flex;
             align-items: baseline;
-            gap: 2vw;
+            gap: 1vw;
         }
 
         .main-temp {
-            font-size: 8vw;
+            font-size: 7vw; /* エリアに合わせて調整 */
             font-weight: 800;
             line-height: 1;
             letter-spacing: -0.05em;
@@ -179,13 +181,13 @@
         .hl-temp-box {
             display: flex;
             flex-direction: column;
-            border-left: 2px solid var(--ink-black); /* 気温の間の縦線 */
-            padding-left: 1vw;
+            border-left: 2px solid var(--ink-black);
+            padding-left: 0.8vw;
             line-height: 1.1;
         }
 
         .hl-temp {
-            font-size: 2.5vw;
+            font-size: 2vw;
             font-weight: 700;
         }
 
@@ -203,11 +205,11 @@
             margin: 1vh 0;
         }
 
-        /* --- 下段：時間ごとの天気 (6,9,12,15,18) --- */
+        /* --- 下段：時間ごとの天気 --- */
         .weather-bottom {
             height: 40%;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* 均等配置 */
             align-items: center;
             padding-top: 1vh;
         }
@@ -216,23 +218,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1vh;
-            width: 18%; /* 5つ並べるので均等に */
+            gap: 0.5vh;
+            width: 18%; 
         }
 
         .hourly-icon {
-            width: 4vw;
-            height: 4vw;
+            width: 3.5vw; /* 少し小さく */
+            height: 3.5vw;
         }
 
         .hourly-time {
-            font-size: 1.2vw;
+            font-size: 1vw;
             font-weight: 700;
             color: var(--slate-gray);
         }
 
         .hourly-temp {
-            font-size: 2vw;
+            font-size: 1.5vw;
             font-weight: 700;
         }
 
@@ -240,12 +242,10 @@
             width: 100%;
             height: 100%;
             fill: var(--ink-black);
-            stroke: var(--ink-black); /* 手書き感のため線を強調 */
+            stroke: var(--ink-black);
             stroke-width: 0.5px;
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
         }
-
-        /* SVGのストローク調整（アイコンによって見え方を変える） */
         .weather-svg path, .weather-svg circle, .weather-svg line {
             stroke-linecap: round;
             stroke-linejoin: round;
@@ -295,7 +295,7 @@
     <div id="hint" class="hint-text">TAP TO FULLSCREEN</div>
 
     <div class="main-layout">
-        <!-- 左側：時計 -->
+        <!-- 左側：時計 (65%) -->
         <div class="clock-container">
             <div class="clock-content-wrapper">
                 <div class="date-section">
@@ -314,10 +314,10 @@
             </div>
         </div>
 
-        <!-- 右側：天気 -->
+        <!-- 右側：天気 (35%) -->
         <div class="weather-container">
             
-            <!-- 上段：現在と詳細 -->
+            <!-- 上段 -->
             <div class="weather-top">
                 <div class="current-icon" id="current-icon"></div>
                 <div class="current-details">
@@ -332,12 +332,11 @@
                 </div>
             </div>
 
-            <!-- 区切り線 -->
             <div class="divider-horizontal"></div>
 
-            <!-- 下段：3時間ごと予報 -->
+            <!-- 下段 -->
             <div class="weather-bottom" id="hourly-forecast">
-                <!-- JSで6,9,12,15,18時のデータを生成 -->
+                <!-- JSで生成 -->
                 <div class="hourly-item"><span class="hourly-time">6</span></div>
                 <div class="hourly-item"><span class="hourly-time">9</span></div>
                 <div class="hourly-item"><span class="hourly-time">12</span></div>
@@ -402,7 +401,6 @@
             document.getElementById('progress').style.width = `${progressPercent}%`;
         }
 
-        // --- Weather Logic ---
         const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=37.9485&longitude=139.3297&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&timezone=Asia%2FTokyo";
 
         const viewboxSetting = "-10 -10 84 84";
@@ -430,15 +428,12 @@
                 const response = await fetch(API_URL);
                 const data = await response.json();
 
-                // --- Current & Daily ---
                 const current = data.current;
                 const daily = data.daily;
                 
-                // 現在
                 const currentTemp = Math.round(current.temperature_2m);
                 const currentDetails = getWeatherDetails(current.weather_code);
                 
-                // 今日
                 const maxT = Math.round(daily.temperature_2m_max[0]);
                 const minT = Math.round(daily.temperature_2m_min[0]);
 
@@ -447,24 +442,14 @@
                 document.getElementById('today-max').textContent = maxT + "°";
                 document.getElementById('today-min').textContent = minT + "°";
 
-                // --- Hourly (6, 9, 12, 15, 18) ---
                 const hourlyContainer = document.getElementById('hourly-forecast');
-                hourlyContainer.innerHTML = ''; // クリア
+                hourlyContainer.innerHTML = ''; 
 
                 const targetHours = [6, 9, 12, 15, 18];
-                const hourlyTimes = data.hourly.time; // ISO8601 strings
                 const hourlyTemps = data.hourly.temperature_2m;
                 const hourlyCodes = data.hourly.weather_code;
 
-                // 今日の日付文字列 (YYYY-MM-DD)
-                const todayStr = new Date().toISOString().slice(0, 10);
-
                 targetHours.forEach(hour => {
-                    // APIのhourlyデータから、今日の日付 かつ 指定時間 のインデックスを探す
-                    // APIは00:00から順に並んでいるため、0〜23番目を取得すれば今日のデータになる
-                    // Open-Meteoのhourlyは配列の最初が「今日」とは限らないが、通常パラメータなしstart/end指定なしなら0番目から開始される
-                    // 安全策としてインデックス計算: hour番目がその時間のデータ
-                    
                     const temp = Math.round(hourlyTemps[hour]);
                     const code = hourlyCodes[hour];
                     const details = getWeatherDetails(code);
