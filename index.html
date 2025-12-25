@@ -55,10 +55,10 @@
             justify-content: space-between;
         }
 
-        /* === 左側：時計と天気 (60%) === */
-        /* 時計エリアを60%まで確保して余裕を持たせる */
+        /* === 左側：時計と天気 (65%) === */
+        /* 時計エリアをさらに拡大 (58% -> 65%) */
         .left-column {
-            width: 60%;
+            width: 65%;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -67,7 +67,7 @@
             position: relative;
             z-index: 10;
             padding-top: 5vh;
-            padding-left: 2vw; 
+            padding-left: 1vw; 
             animation: float 6s ease-in-out infinite;
         }
 
@@ -76,8 +76,6 @@
             flex-direction: column;
             align-items: flex-start;
             margin-bottom: 5vh;
-            /* 幅制限を解除 */
-            width: 100%;
         }
 
         .date-section {
@@ -102,14 +100,11 @@
             align-items: baseline;
             line-height: 1;
             margin-top: 1vh;
-            /* 折り返し防止 */
-            white-space: nowrap;
         }
 
         .time-section {
-            /* 【修正】はみ出し防止のため 19vw -> 16.5vw に調整 */
-            /* 左エリア60%に対して適切な最大サイズ */
-            font-size: 16.5vw; 
+            /* 左側が広がったのでサイズ維持または微調整 */
+            font-size: 20vw; 
             font-weight: 800;
             letter-spacing: -0.05em;
             color: var(--ink-black);
@@ -127,13 +122,12 @@
 
         .seconds {
             font-family: 'Poppins', sans-serif;
-            /* 秒数もバランス調整 6vw -> 5vw */
-            font-size: 5vw; 
+            font-size: 6vw; 
             font-weight: 600;
             color: var(--slate-gray);
             margin-left: 1.2vw;
             opacity: 0.8;
-            width: 7.5vw; 
+            width: 8.5vw; 
             text-align: left;
             font-variant-numeric: tabular-nums;
             letter-spacing: -0.02em;
@@ -214,10 +208,10 @@
         }
 
 
-        /* === 右側：カレンダー (40%) === */
-        /* 時計エリア確保のため40%に調整 */
+        /* === 右側：カレンダー (35%) === */
+        /* エリアを狭くして、文字サイズも縮小 */
         .right-column {
-            width: 40%;
+            width: 35%;
             height: 80%;
             display: flex;
             justify-content: center;
@@ -233,7 +227,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transform: scale(1.0); 
         }
 
         .calendar-header-row {
@@ -241,22 +234,24 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            margin-bottom: 2.5vh;
+            margin-bottom: 2vh;
         }
 
         .calendar-title {
-            font-size: 2.2vw;
+            /* 縮小 2.2vw -> 1.8vw */
+            font-size: 1.8vw; 
             font-weight: 700;
             letter-spacing: 0.05em;
         }
 
         .calendar-nav {
             display: flex;
-            gap: 2vw;
+            gap: 1.5vw;
         }
 
         .cal-btn {
-            font-size: 4vw;
+            /* 縮小 4vw -> 3vw */
+            font-size: 3vw;
             font-weight: 700;
             cursor: pointer;
             color: var(--slate-gray);
@@ -270,23 +265,25 @@
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 1.2vh 0.2vw;
+            gap: 1vh 0.2vw;
             width: 100%;
             text-align: center;
         }
 
         .cal-day-name {
-            font-size: 1.3vw;
+            /* 縮小 1.3vw -> 1.1vw */
+            font-size: 1.1vw;
             font-weight: 600;
             color: var(--slate-gray);
             margin-bottom: 0.5vh;
         }
 
         .cal-date {
-            font-size: 1.9vw;
+            /* 縮小 1.8vw -> 1.5vw */
+            font-size: 1.5vw;
             font-weight: 500;
-            width: 3.8vw;
-            height: 3.8vw;
+            width: 3vw;
+            height: 3vw;
             display: flex;
             justify-content: center;
             align-items: center;
