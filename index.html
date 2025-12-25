@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- キャッシュ無効化 -->
+    <!-- 強力なキャッシュ無効化設定 -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <!-- PWA設定 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="16:9 Clock">
+    <meta name="apple-mobile-web-app-title" content="16:9 Clock V3">
     <link rel="manifest" id="manifest-placeholder">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f4f4f4'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%231a1a1a' stroke-width='40'/%3E%3Cline x1='256' y1='256' x2='256' y2='100' stroke='%231a1a1a' stroke-width='30' stroke-linecap='round'/%3E%3Cline x1='256' y1='256' x2='380' y2='256' stroke='%23666666' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='20' fill='%231a1a1a'/%3E%3C/svg%3E">
     
-    <title>Monotone 16:9 Clock Layout V3</title>
+    <title>Monotone Clock V3 (No Cache)</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&family=Noto+Sans+JP:wght@400;700&display=swap');
@@ -64,19 +63,20 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 上下に配置 */
+            justify-content: center;
             align-items: flex-start;
             position: relative;
             z-index: 10;
-            padding-top: 5vh; /* バランス調整 */
+            padding-top: 5vh;
+            animation: float 6s ease-in-out infinite;
         }
 
-        /* --- 時計部分 --- */
+        /* 時計 */
         .clock-wrapper {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            margin-bottom: 6vh; /* 天気との間隔 */
+            margin-bottom: 6vh;
         }
 
         .date-section {
@@ -104,7 +104,6 @@
         }
 
         .time-section {
-            /* 天気を入れるため少しサイズ調整 */
             font-size: 18vw; 
             font-weight: 800;
             letter-spacing: -0.05em;
@@ -134,23 +133,22 @@
             letter-spacing: -0.02em;
         }
 
-        /* --- 天気バー（横一列） --- */
+        /* 天気バー */
         .weather-bar {
             display: flex;
             align-items: center;
-            gap: 2.5vw; /* 要素間の間隔 */
+            gap: 2.5vw;
             padding-left: 1vw;
             animation: fadeIn 2s ease-out;
             width: 100%;
         }
 
-        /* 現在の天気（左端） */
         .current-weather-group {
             display: flex;
             align-items: center;
             gap: 1vw;
             padding-right: 2.5vw;
-            border-right: 2px solid rgba(0,0,0,0.1); /* 区切り線 */
+            border-right: 2px solid rgba(0,0,0,0.1);
         }
 
         .current-icon {
@@ -178,7 +176,6 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* 時間ごとの予報（横並び） */
         .hourly-scroll {
             display: flex;
             align-items: center;
@@ -208,7 +205,6 @@
             font-size: 1.4vw;
             font-weight: 700;
         }
-
 
         /* === 右側：カレンダー (38%) === */
         .right-column {
@@ -294,7 +290,6 @@
             font-weight: 700;
         }
 
-        /* 共通：SVGスタイル */
         .weather-svg {
             width: 100%;
             height: 100%;
@@ -343,11 +338,6 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* 時計全体を少し浮かすアニメーション */
-        .left-column {
-            animation: float 6s ease-in-out infinite;
-        }
 
     </style>
 </head>
@@ -356,10 +346,8 @@
     <div id="hint" class="hint-text">TAP TO FULLSCREEN</div>
 
     <div class="main-layout">
-        <!-- 左側：時計 ＋ 天気バー -->
         <div class="left-column">
             
-            <!-- 時計 -->
             <div class="clock-wrapper">
                 <div class="date-section">
                     <span id="date">LOADING</span>
@@ -375,10 +363,7 @@
                 </div>
             </div>
 
-            <!-- 天気バー (時計の下) -->
             <div class="weather-bar">
-                
-                <!-- 現在の天気 -->
                 <div class="current-weather-group">
                     <div class="current-icon" id="main-icon"></div>
                     <div class="current-temp-info">
@@ -387,20 +372,16 @@
                     </div>
                 </div>
 
-                <!-- 時間予報 (横並び) -->
                 <div class="hourly-scroll" id="hourly-forecast">
-                    <!-- JSで生成: 6, 9, 12, 15, 18 -->
                     <div class="hourly-item"><span class="hourly-time">6</span></div>
                     <div class="hourly-item"><span class="hourly-time">9</span></div>
                     <div class="hourly-item"><span class="hourly-time">12</span></div>
                     <div class="hourly-item"><span class="hourly-time">15</span></div>
                     <div class="hourly-item"><span class="hourly-time">18</span></div>
                 </div>
-
             </div>
         </div>
 
-        <!-- 右側：カレンダーのみ -->
         <div class="right-column">
             <div class="calendar-container">
                 <div class="calendar-header-row">
@@ -411,11 +392,9 @@
                     </div>
                 </div>
                 <div class="calendar-grid" id="cal-grid">
-                    <!-- JSで生成 -->
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="progress-bar-container">
@@ -425,10 +404,13 @@
     <script>
         function setupManifest() {
             const iconData = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f4f4f4'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%231a1a1a' stroke-width='40'/%3E%3Cline x1='256' y1='256' x2='256' y2='100' stroke='%231a1a1a' stroke-width='30' stroke-linecap='round'/%3E%3Cline x1='256' y1='256' x2='380' y2='256' stroke='%23666666' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='20' fill='%231a1a1a'/%3E%3C/svg%3E";
+            // キャッシュ対策としてURLにタイムスタンプを付与
+            const startUrl = window.location.href + "?v=" + new Date().getTime();
+            
             const manifest = {
                 "name": "Monotone V3",
                 "short_name": "Clock",
-                "start_url": ".",
+                "start_url": startUrl,
                 "display": "fullscreen",
                 "background_color": "#f4f4f4",
                 "theme_color": "#f4f4f4",
@@ -448,7 +430,6 @@
             }
         }
 
-        // --- 時計 ---
         function updateClock() {
             const now = new Date();
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -473,7 +454,6 @@
             document.getElementById('progress').style.width = `${progressPercent}%`;
         }
 
-        // --- 天気 ---
         const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=37.9485&longitude=139.3297&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&timezone=Asia%2FTokyo";
         const viewboxSetting = "-10 -10 84 84";
         const icons = {
@@ -512,11 +492,8 @@
                 const hourlyContainer = document.getElementById('hourly-forecast');
                 hourlyContainer.innerHTML = ''; 
                 
-                // 19時以降なら明日のデータを取得、それ以前なら今日
                 const isTomorrowMode = currentHour >= 19;
                 const offset = isTomorrowMode ? 24 : 0;
-                
-                // ターゲットの時間 (6, 9, 12, 15, 18)
                 const targetHours = [6, 9, 12, 15, 18];
                 const hourlyTemps = data.hourly.temperature_2m;
                 const hourlyCodes = data.hourly.weather_code;
