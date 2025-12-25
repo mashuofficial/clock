@@ -11,11 +11,11 @@
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="16:9 Clock V6">
+    <meta name="apple-mobile-web-app-title" content="16:9 Clock V7">
     <link rel="manifest" id="manifest-placeholder">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f4f4f4'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%231a1a1a' stroke-width='40'/%3E%3Cline x1='256' y1='256' x2='256' y2='100' stroke='%231a1a1a' stroke-width='30' stroke-linecap='round'/%3E%3Cline x1='256' y1='256' x2='380' y2='256' stroke='%23666666' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='20' fill='%231a1a1a'/%3E%3C/svg%3E">
     
-    <title>Monotone Clock V6</title>
+    <title>Monotone Clock V7</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&family=Noto+Sans+JP:wght@400;700&display=swap');
@@ -55,10 +55,10 @@
             justify-content: space-between;
         }
 
-        /* === 左側：時計と天気 (52%) === */
-        /* カレンダーを左に寄せる＝左エリアを狭くする (56% -> 52%) */
+        /* === 左側：時計と天気 (58%) === */
+        /* 時計エリアを拡大 (52% -> 58%) */
         .left-column {
-            width: 52%;
+            width: 58%;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -79,7 +79,8 @@
         }
 
         .date-section {
-            font-size: 1.6vw; 
+            /* サイズ拡大 */
+            font-size: 1.8vw; 
             font-weight: 500;
             letter-spacing: 0.1em;
             color: var(--slate-gray);
@@ -103,8 +104,8 @@
         }
 
         .time-section {
-            /* 【変更点】時計拡大: 14.5vw -> 17vw */
-            font-size: 17vw; 
+            /* 時計拡大: 17vw -> 19vw */
+            font-size: 19vw; 
             font-weight: 800;
             letter-spacing: -0.05em;
             color: var(--ink-black);
@@ -122,13 +123,13 @@
 
         .seconds {
             font-family: 'Poppins', sans-serif;
-            /* 【変更点】秒数も少し拡大 */
-            font-size: 5.5vw; 
+            /* 秒数拡大 */
+            font-size: 6vw; 
             font-weight: 600;
             color: var(--slate-gray);
             margin-left: 1.2vw;
             opacity: 0.8;
-            width: 7.5vw; 
+            width: 8.5vw; 
             text-align: left;
             font-variant-numeric: tabular-nums;
             letter-spacing: -0.02em;
@@ -138,7 +139,7 @@
         .weather-bar {
             display: flex;
             align-items: center;
-            gap: 1.5vw; /* 間隔を少し詰める（左エリアが狭くなったため） */
+            gap: 2vw;
             padding-left: 0.5vw;
             animation: fadeIn 2s ease-out;
             width: 100%;
@@ -147,15 +148,16 @@
         .current-weather-group {
             display: flex;
             align-items: center;
-            gap: 0.8vw;
-            padding-right: 1.5vw;
+            gap: 1vw;
+            padding-right: 2vw;
             border-right: 2px solid rgba(0,0,0,0.1);
-            min-width: 13vw; 
+            min-width: 15vw; 
         }
 
         .current-icon {
-            width: 4.5vw;
-            height: 4.5vw;
+            /* 天気アイコン拡大 4.5vw -> 6.5vw */
+            width: 6.5vw;
+            height: 6.5vw;
         }
 
         .current-temp-info {
@@ -165,14 +167,16 @@
         }
 
         .location-label {
-            font-size: 0.75vw;
+            /* 拡大 */
+            font-size: 0.9vw;
             font-weight: 700;
             color: var(--slate-gray);
             letter-spacing: 0.05em;
         }
 
         .current-temp-big {
-            font-size: 2.8vw;
+            /* 拡大 */
+            font-size: 3.8vw;
             font-weight: 700;
             line-height: 1;
             font-variant-numeric: tabular-nums;
@@ -181,7 +185,7 @@
         .hourly-scroll {
             display: flex;
             align-items: center;
-            gap: 1vw; 
+            gap: 1.5vw; 
         }
 
         .hourly-item {
@@ -189,36 +193,40 @@
             flex-direction: column;
             align-items: center;
             gap: 0.5vh;
-            width: 3.5vw; 
+            /* 幅拡大 */
+            width: 4.5vw; 
         }
 
         .hourly-icon {
-            width: 2vw;
-            height: 2vw;
+            /* 拡大 */
+            width: 3vw;
+            height: 3vw;
         }
 
         .hourly-time {
-            font-size: 0.75vw;
+            /* 拡大 */
+            font-size: 0.9vw;
             font-weight: 600;
             color: var(--slate-gray);
         }
 
         .hourly-temp {
-            font-size: 1.1vw;
+            /* 拡大 */
+            font-size: 1.4vw;
             font-weight: 700;
         }
 
 
-        /* === 右側：カレンダー (48%) === */
-        /* 左側を狭くした分、右側を広くする (44% -> 48%) -> 境界線が左に移動する */
+        /* === 右側：カレンダー (42%) === */
+        /* カレンダーエリアを少し狭く (48% -> 42%) */
         .right-column {
-            width: 48%;
+            width: 42%;
             height: 80%;
             display: flex;
             justify-content: center;
             align-items: center;
             border-left: 4px solid var(--ink-black);
-            padding-left: 4vw;
+            padding-left: 3vw;
         }
 
         .calendar-container {
@@ -240,7 +248,7 @@
         }
 
         .calendar-title {
-            font-size: 2.2vw;
+            font-size: 2vw; /* 少し小さく調整 */
             font-weight: 700;
             letter-spacing: 0.05em;
         }
@@ -265,23 +273,23 @@
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 1.2vh 0.3vw;
+            gap: 1.2vh 0.2vw;
             width: 100%;
             text-align: center;
         }
 
         .cal-day-name {
-            font-size: 1.3vw;
+            font-size: 1.2vw;
             font-weight: 600;
             color: var(--slate-gray);
             margin-bottom: 0.5vh;
         }
 
         .cal-date {
-            font-size: 1.9vw;
+            font-size: 1.8vw;
             font-weight: 500;
-            width: 3.8vw;
-            height: 3.8vw;
+            width: 3.5vw;
+            height: 3.5vw;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -414,7 +422,7 @@
             const startUrl = window.location.href + "?v=" + new Date().getTime();
             
             const manifest = {
-                "name": "Monotone V6",
+                "name": "Monotone V7",
                 "short_name": "Clock",
                 "start_url": startUrl,
                 "display": "fullscreen",
@@ -499,7 +507,6 @@
                 const isTomorrowMode = currentHour >= 19;
                 const offset = isTomorrowMode ? 24 : 0;
                 
-                // 21時まで含めた6つ
                 const targetHours = [6, 9, 12, 15, 18, 21];
                 const hourlyTemps = data.hourly.temperature_2m;
                 const hourlyCodes = data.hourly.weather_code;
