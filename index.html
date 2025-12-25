@@ -12,11 +12,11 @@
     <!-- PWA設定 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Standby Clock">
+    <meta name="apple-mobile-web-app-title" content="16:9 Clock">
     <link rel="manifest" id="manifest-placeholder">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f4f4f4'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%231a1a1a' stroke-width='40'/%3E%3Cline x1='256' y1='256' x2='256' y2='100' stroke='%231a1a1a' stroke-width='30' stroke-linecap='round'/%3E%3Cline x1='256' y1='256' x2='380' y2='256' stroke='%23666666' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='20' fill='%231a1a1a'/%3E%3C/svg%3E">
     
-    <title>Monotone Standby Clock</title>
+    <title>Monotone 16:9 Clock</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&family=Noto+Sans+JP:wght@400;700&display=swap');
@@ -48,16 +48,17 @@
 
         .main-layout {
             display: flex;
-            width: 94vw; 
+            width: 96vw; /* 16:9向けに少し幅を確保 */
             height: 100vh;
             margin: 0 auto;
             align-items: center;
             justify-content: space-between;
         }
 
-        /* === 左側：時計エリア (63%) === */
+        /* === 左側：時計エリア (60%) === */
+        /* 16:9だと横幅が狭くなるため、時計エリアの比率を少し調整 */
         .clock-container {
-            width: 63%;
+            width: 60%;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -74,7 +75,7 @@
         }
 
         .date-section {
-            font-size: 2vw; 
+            font-size: 2.2vw; /* 16:9用に調整 */
             font-weight: 500;
             letter-spacing: 0.1em;
             color: var(--slate-gray);
@@ -98,7 +99,8 @@
         }
 
         .time-section {
-            font-size: 19vw; 
+            /* 16:9だと縦に余裕があるので少し小さくしないと圧迫感がある */
+            font-size: 20vw; 
             font-weight: 800;
             letter-spacing: -0.05em;
             color: var(--ink-black);
@@ -116,48 +118,45 @@
 
         .seconds {
             font-family: 'Poppins', sans-serif;
-            font-size: 5.5vw; 
+            font-size: 6vw; 
             font-weight: 600;
             color: var(--slate-gray);
             margin-left: 1.5vw;
             opacity: 0.8;
-            width: 7.5vw; 
+            width: 8vw; 
             text-align: left;
             font-variant-numeric: tabular-nums;
             letter-spacing: -0.02em;
         }
 
-        /* === 右側：ウィジェットウィンドウ (37%) === */
-        /* ここを「窓」にして、中身をスワイプさせる */
+        /* === 右側：ウィジェットウィンドウ (40%) === */
         .right-panel-window {
-            width: 37%;
-            height: 75%;
+            width: 40%;
+            height: 80%; /* 上下に少し余白 */
             position: relative;
-            overflow: hidden; /* はみ出した部分を隠す */
+            overflow: hidden; 
+            /* インジケーター用の余白を右側に確保 */
+            padding-right: 3vw; 
             padding-left: 3vw;
-            /* 境界線はここで描画 */
             border-left: 4px solid var(--ink-black);
-            /* スワイプ操作のための設定 */
             touch-action: none; 
         }
 
-        /* スライドする中身のコンテナ */
         .widget-stack {
             width: 100%;
-            height: 200%; /* 2枚分なので200% */
+            height: 200%; 
             display: flex;
-            flex-direction: column; /* 縦並び */
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* iPhoneっぽい慣性スクロール */
+            flex-direction: column; 
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* 各ウィジェット共通 */
         .widget-slide {
             width: 100%;
-            height: 50%; /* 親の半分（画面の1枚分） */
+            height: 50%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding-right: 1vw; /* インジケーター用の余白 */
+            padding-bottom: 2vh; /* 下部の余白 */
         }
 
         /* --- 1枚目：天気ウィジェット --- */
@@ -165,14 +164,14 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            gap: 1.5vw;
+            gap: 1vw;
             height: 55%;
+            margin-top: 2vh;
         }
 
         .current-icon {
-            width: 12vw;
-            height: 12vw;
-            padding: 0;
+            width: 13vw; /* 16:9用に少し大きく */
+            height: 13vw;
             flex-shrink: 0;
         }
 
@@ -191,18 +190,18 @@
         }
 
         .location-name {
-            font-size: 1.4vw;
+            font-size: 1.6vw;
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
 
         .day-label {
-            font-size: 1.1vw;
+            font-size: 1.2vw;
             font-weight: 700;
             color: var(--ink-black);
             background: rgba(0,0,0,0.08);
-            padding: 0.2vh 0.5vw;
+            padding: 0.2vh 0.6vw;
             border-radius: 4px;
             width: fit-content;
             margin-top: 0.5vh;
@@ -211,11 +210,11 @@
         .temp-row {
             display: flex;
             align-items: baseline;
-            gap: 1.5vw;
+            gap: 1vw;
         }
 
         .main-temp {
-            font-size: 8.5vw;
+            font-size: 9vw;
             font-weight: 800;
             line-height: 1;
             letter-spacing: -0.05em;
@@ -226,12 +225,12 @@
             display: flex;
             flex-direction: column;
             border-left: 3px solid var(--ink-black);
-            padding-left: 1vw;
+            padding-left: 0.8vw;
             line-height: 1.1;
         }
 
         .hl-temp {
-            font-size: 2.8vw;
+            font-size: 3vw;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
         }
@@ -266,19 +265,19 @@
         }
 
         .hourly-icon {
-            width: 4.5vw;
-            height: 4.5vw;
+            width: 5vw;
+            height: 5vw;
         }
 
         .hourly-time {
-            font-size: 1.3vw;
+            font-size: 1.5vw;
             font-weight: 700;
             color: var(--slate-gray);
             font-variant-numeric: tabular-nums;
         }
 
         .hourly-temp {
-            font-size: 2vw;
+            font-size: 2.2vw;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
         }
@@ -293,36 +292,56 @@
             justify-content: center;
         }
 
-        .calendar-header {
-            font-size: 2.5vw;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            margin-bottom: 2vh;
+        .calendar-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             width: 100%;
-            text-align: left;
+            margin-bottom: 2vh;
             padding-left: 0.5vw;
         }
+
+        .calendar-title {
+            font-size: 2.5vw;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 1.5vw;
+        }
+
+        .cal-btn {
+            font-size: 2.5vw;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--slate-gray);
+            user-select: none;
+            transition: color 0.2s;
+        }
+        .cal-btn:hover { color: var(--ink-black); }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 1vh 0.5vw;
+            gap: 0.8vh 0.2vw;
             width: 100%;
             text-align: center;
         }
 
         .cal-day-name {
-            font-size: 1.2vw;
+            font-size: 1.4vw;
             font-weight: 600;
             color: var(--slate-gray);
-            margin-bottom: 1vh;
+            margin-bottom: 0.5vh;
         }
 
         .cal-date {
-            font-size: 1.8vw;
+            font-size: 2vw;
             font-weight: 500;
-            width: 3.5vw;
-            height: 3.5vw;
+            width: 4vw;
+            height: 4vw;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -330,28 +349,28 @@
             margin: 0 auto;
         }
 
-        /* 今日のスタイル */
         .cal-today {
             background-color: var(--ink-black);
             color: var(--bg-base);
             font-weight: 700;
         }
 
-        /* 右端のインジケーター（点々） */
+        /* インジケーター（右端の点） */
         .indicators {
             position: absolute;
-            right: 0;
+            right: 0; /* padding-rightエリアに配置 */
             top: 50%;
             transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 1vh;
+            gap: 1.5vh;
             z-index: 20;
+            padding-right: 5px; /* 少し余裕を持たせる */
         }
 
         .dot {
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background-color: var(--ink-black);
             opacity: 0.2;
@@ -360,7 +379,7 @@
 
         .dot.active {
             opacity: 1;
-            transform: scale(1.3);
+            transform: scale(1.4);
         }
 
         .weather-svg {
@@ -435,7 +454,6 @@
         <!-- 右側：ウィジェットウィンドウ -->
         <div class="right-panel-window" id="right-panel">
             
-            <!-- スライドするスタック -->
             <div class="widget-stack" id="widget-stack">
                 
                 <!-- 1枚目：天気 -->
@@ -469,7 +487,13 @@
                 <!-- 2枚目：カレンダー -->
                 <div class="widget-slide">
                     <div class="calendar-container">
-                        <div class="calendar-header" id="cal-header">Month Year</div>
+                        <div class="calendar-header-row">
+                            <span class="calendar-title" id="cal-header">Month Year</span>
+                            <div class="calendar-nav">
+                                <div class="cal-btn" onclick="changeMonth(-1); event.stopPropagation();">&lt;</div>
+                                <div class="cal-btn" onclick="changeMonth(1); event.stopPropagation();">&gt;</div>
+                            </div>
+                        </div>
                         <div class="calendar-grid" id="cal-grid">
                             <!-- JSで生成 -->
                         </div>
@@ -478,7 +502,7 @@
 
             </div>
 
-            <!-- インジケーター -->
+            <!-- インジケーター (padding領域に配置) -->
             <div class="indicators">
                 <div class="dot active" id="dot-0"></div>
                 <div class="dot" id="dot-1"></div>
@@ -492,11 +516,10 @@
     </div>
 
     <script>
-        // --- 共通設定 ---
         function setupManifest() {
             const iconData = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f4f4f4'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%231a1a1a' stroke-width='40'/%3E%3Cline x1='256' y1='256' x2='256' y2='100' stroke='%231a1a1a' stroke-width='30' stroke-linecap='round'/%3E%3Cline x1='256' y1='256' x2='380' y2='256' stroke='%23666666' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='20' fill='%231a1a1a'/%3E%3C/svg%3E";
             const manifest = {
-                "name": "Monotone Standby",
+                "name": "Monotone 16:9",
                 "short_name": "Standby",
                 "start_url": ".",
                 "display": "fullscreen",
@@ -616,20 +639,23 @@
         }
 
         // --- カレンダー ---
+        let displayDate = new Date(); // カレンダー表示用の日付
+
         function renderCalendar() {
             const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth();
-            const today = now.getDate();
+            const year = displayDate.getFullYear();
+            const month = displayDate.getMonth();
+            
+            // 今日の日付確認用
+            const isCurrentMonth = (now.getFullYear() === year && now.getMonth() === month);
+            const todayDate = now.getDate();
 
-            // 月名
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             document.getElementById('cal-header').textContent = `${monthNames[month]} ${year}`;
 
             const grid = document.getElementById('cal-grid');
             grid.innerHTML = '';
 
-            // 曜日ヘッダー
             const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
             dayNames.forEach(d => {
                 const el = document.createElement('div');
@@ -638,7 +664,6 @@
                 grid.appendChild(el);
             });
 
-            // 空白と日付
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -650,12 +675,18 @@
                 const el = document.createElement('div');
                 el.className = 'cal-date';
                 el.textContent = i;
-                if (i === today) el.classList.add('cal-today');
+                // 今日かつ表示中の月なら黒丸
+                if (isCurrentMonth && i === todayDate) el.classList.add('cal-today');
                 grid.appendChild(el);
             }
         }
 
-        // --- スワイプ処理 ---
+        function changeMonth(delta) {
+            displayDate.setMonth(displayDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        // --- スワイプ処理（ループ対応） ---
         const rightPanel = document.getElementById('right-panel');
         const widgetStack = document.getElementById('widget-stack');
         let startY = 0;
@@ -669,23 +700,23 @@
             const endY = e.changedTouches[0].clientY;
             const diff = startY - endY;
 
-            if (Math.abs(diff) > 30) { // スワイプ感度
+            // スワイプ判定 (感度30px)
+            if (Math.abs(diff) > 30) { 
                 if (diff > 0) {
-                    // 上へスワイプ -> 次へ
-                    if (currentWidgetIndex < 1) currentWidgetIndex++;
+                    // 上へスワイプ (Weather -> Calendar -> Weather)
+                    currentWidgetIndex = (currentWidgetIndex + 1) % 2;
                 } else {
-                    // 下へスワイプ -> 前へ
-                    if (currentWidgetIndex > 0) currentWidgetIndex--;
+                    // 下へスワイプ (Calendar -> Weather -> Calendar)
+                    // (0 - 1 + 2) % 2 = 1, (1 - 1 + 2) % 2 = 0
+                    currentWidgetIndex = (currentWidgetIndex - 1 + 2) % 2;
                 }
                 updateWidgetView();
             }
         });
 
         function updateWidgetView() {
-            // スライド処理
             widgetStack.style.transform = `translateY(-${currentWidgetIndex * 50}%)`;
             
-            // インジケーター更新
             document.querySelectorAll('.dot').forEach((dot, index) => {
                 dot.classList.toggle('active', index === currentWidgetIndex);
             });
