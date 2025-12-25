@@ -11,11 +11,11 @@
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="16:9 Clock V9">
+    <meta name="apple-mobile-web-app-title" content="16:9 Clock V10">
     <link rel="manifest" id="manifest-placeholder">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f4f4f4'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%231a1a1a' stroke-width='40'/%3E%3Cline x1='256' y1='256' x2='256' y2='100' stroke='%231a1a1a' stroke-width='30' stroke-linecap='round'/%3E%3Cline x1='256' y1='256' x2='380' y2='256' stroke='%23666666' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='20' fill='%231a1a1a'/%3E%3C/svg%3E">
     
-    <title>Monotone Clock V9</title>
+    <title>Monotone Clock V10</title>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&family=Noto+Sans+JP:wght@400;700&display=swap');
@@ -147,7 +147,7 @@
             gap: 1vw;
             padding-right: 2vw;
             border-right: 2px solid rgba(0,0,0,0.1);
-            min-width: 15vw; 
+            min-width: 19vw; /* 最高最低気温が入るので幅を広げる */
         }
 
         .current-icon {
@@ -168,11 +168,38 @@
             letter-spacing: 0.05em;
         }
 
+        /* 現在気温とHL気温を横並びにするラッパー */
+        .temp-row {
+            display: flex;
+            align-items: center;
+            gap: 1vw;
+        }
+
         .current-temp-big {
             font-size: 3.8vw;
             font-weight: 700;
             line-height: 1;
             font-variant-numeric: tabular-nums;
+        }
+
+        /* 最高最低気温のボックス */
+        .hl-temp-box {
+            display: flex;
+            flex-direction: column;
+            border-left: 2px solid var(--ink-black);
+            padding-left: 0.6vw;
+            line-height: 1.1;
+        }
+
+        .hl-temp {
+            font-size: 1.2vw;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--ink-black);
+        }
+
+        .low-temp {
+            color: var(--slate-gray);
         }
 
         .hourly-scroll {
@@ -226,11 +253,10 @@
             justify-content: center;
         }
 
-        /* カレンダー上部（タイトルのみ） */
         .calendar-header-row {
             display: flex;
             align-items: center;
-            justify-content: center; /* 中央寄せ */
+            justify-content: center;
             width: 100%;
             margin-bottom: 1.5vh;
         }
@@ -241,11 +267,10 @@
             letter-spacing: 0.05em;
         }
 
-        /* カレンダー下部（ボタン） */
         .calendar-nav-bottom {
             display: flex;
             justify-content: center;
-            gap: 4vw; /* ボタンの間隔を広めに */
+            gap: 4vw;
             margin-top: 1.5vh;
             width: 100%;
         }
@@ -257,7 +282,7 @@
             color: var(--slate-gray);
             user-select: none;
             transition: all 0.2s;
-            padding: 0 1vw; /* タップしやすいように */
+            padding: 0 1vw;
             line-height: 1;
         }
         .cal-btn:hover { color: var(--ink-black); transform: scale(1.2); }
@@ -373,7 +398,14 @@
                     <div class="current-icon" id="main-icon"></div>
                     <div class="current-temp-info">
                         <span class="location-label">SHIBATA</span>
-                        <span class="current-temp-big" id="main-temp">--°</span>
+                        <!-- 現在気温と最高最低を横並びにする -->
+                        <div class="temp-row">
+                            <span class="current-temp-big" id="main-temp">--°</span>
+                            <div class="hl-temp-box">
+                                <span class="hl-temp" id="max-temp">--°</span>
+                                <span class="hl-temp low-temp" id="min-temp">--°</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -398,7 +430,6 @@
                     <!-- JSで生成 -->
                 </div>
 
-                <!-- ボタンを下に配置 -->
                 <div class="calendar-nav-bottom">
                     <div class="cal-btn" onclick="changeMonth(-1); event.stopPropagation();">&lt;</div>
                     <div class="cal-btn" onclick="changeMonth(1); event.stopPropagation();">&gt;</div>
@@ -414,11 +445,10 @@
     <script>
         function setupManifest() {
             const iconData = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f4f4f4'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%231a1a1a' stroke-width='40'/%3E%3Cline x1='256' y1='256' x2='256' y2='100' stroke='%231a1a1a' stroke-width='30' stroke-linecap='round'/%3E%3Cline x1='256' y1='256' x2='380' y2='256' stroke='%23666666' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='20' fill='%231a1a1a'/%3E%3C/svg%3E";
-            // キャッシュ対策としてURLにタイムスタンプを付与
             const startUrl = window.location.href + "?v=" + new Date().getTime();
             
             const manifest = {
-                "name": "Monotone V9",
+                "name": "Monotone V10",
                 "short_name": "Clock",
                 "start_url": startUrl,
                 "display": "fullscreen",
@@ -464,7 +494,8 @@
             document.getElementById('progress').style.width = `${progressPercent}%`;
         }
 
-        const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=37.9485&longitude=139.3297&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&timezone=Asia%2FTokyo";
+        // dailyパラメータを追加して最高最低気温を取得可能に
+        const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=37.9485&longitude=139.3297&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo";
         const viewboxSetting = "-10 -10 84 84";
         const icons = {
             sun: `<svg class="weather-svg" viewBox="${viewboxSetting}"><circle cx="32" cy="32" r="14" stroke="currentColor" stroke-width="5" fill="none"/><path d="M32 6V12 M32 52V58 M58 32H52 M12 32H6 M50.4 13.6L46.1 17.9 M17.9 46.1L13.6 50.4 M50.4 50.4L46.1 46.1 M17.9 17.9L13.6 13.6" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg>`,
@@ -490,19 +521,36 @@
                 const response = await fetch(API_URL);
                 const data = await response.json();
                 const currentHour = new Date().getHours();
+                const isTomorrowMode = currentHour >= 19;
                 
-                const currentTemp = Math.round(data.current.temperature_2m);
-                const currentIcon = getWeatherDetails(data.current.weather_code).icon;
+                // 現在/明日のインデックス
+                const dailyIndex = isTomorrowMode ? 1 : 0;
                 
-                document.getElementById('main-icon').innerHTML = currentIcon;
-                document.getElementById('main-temp').textContent = currentTemp + "°";
+                // --- 現在の天気と最高最低気温 ---
+                let mainDisplayTemp;
+                let mainDisplayIcon;
+                
+                if (isTomorrowMode) {
+                    mainDisplayTemp = Math.round(data.daily.temperature_2m_max[dailyIndex]);
+                    mainDisplayIcon = getWeatherDetails(data.daily.weather_code[dailyIndex]).icon;
+                } else {
+                    mainDisplayTemp = Math.round(data.current.temperature_2m);
+                    mainDisplayIcon = getWeatherDetails(data.current.weather_code).icon;
+                }
+                
+                const maxT = Math.round(data.daily.temperature_2m_max[dailyIndex]);
+                const minT = Math.round(data.daily.temperature_2m_min[dailyIndex]);
 
+                document.getElementById('main-icon').innerHTML = mainDisplayIcon;
+                document.getElementById('main-temp').textContent = mainDisplayTemp + "°";
+                document.getElementById('max-temp').textContent = maxT + "°";
+                document.getElementById('min-temp').textContent = minT + "°";
+
+                // --- 時間ごとの予報 ---
                 const hourlyContainer = document.getElementById('hourly-forecast');
                 hourlyContainer.innerHTML = ''; 
                 
-                const isTomorrowMode = currentHour >= 19;
                 const offset = isTomorrowMode ? 24 : 0;
-                
                 const targetHours = [6, 9, 12, 15, 18, 21];
                 const hourlyTemps = data.hourly.temperature_2m;
                 const hourlyCodes = data.hourly.weather_code;
