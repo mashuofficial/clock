@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
+    <!-- キャッシュ対策 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <!-- PWA設定 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -11,11 +16,10 @@
     <link rel="manifest" id="manifest-placeholder">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f4f4f4'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%231a1a1a' stroke-width='40'/%3E%3Cline x1='256' y1='256' x2='256' y2='100' stroke='%231a1a1a' stroke-width='30' stroke-linecap='round'/%3E%3Cline x1='256' y1='256' x2='380' y2='256' stroke='%23666666' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='20' fill='%231a1a1a'/%3E%3C/svg%3E">
     
-    <title>Monotone Clock & Weather</title>
+    <title>Monotone Clock & Weather v2</title>
     
     <style>
-        /* 数字のガタつきを防ぐため、等幅に強いRoboto Monoも追加 */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&family=Roboto+Mono:wght@500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&family=Noto+Sans+JP:wght@400;700&display=swap');
 
         :root {
             --bg-base: #f4f4f4;
@@ -51,9 +55,9 @@
             justify-content: space-between;
         }
 
-        /* === 左側：時計エリア (65%) === */
+        /* === 左側：時計エリア (63%) === */
         .clock-container {
-            width: 63%; /* 余裕を持たせるため少し減らす */
+            width: 63%;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -67,7 +71,6 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            /* ここで幅を制限しすぎない */
         }
 
         .date-section {
@@ -95,12 +98,11 @@
         }
 
         .time-section {
-            /* はみ出し防止のため少しサイズダウン 22vw -> 19vw */
             font-size: 19vw; 
             font-weight: 800;
             letter-spacing: -0.05em;
             color: var(--ink-black);
-            /* 数字の幅を一定にする */
+            /* 重要: 数字の幅を一定にする */
             font-variant-numeric: tabular-nums;
             text-shadow: 0 10px 40px rgba(0,0,0,0.05);
             display: flex;
@@ -114,32 +116,34 @@
         }
 
         .seconds {
-            /* ガタつき防止の決定版：等幅フォント指定 */
-            font-family: 'Roboto Mono', monospace;
+            /* Poppinsに戻す */
+            font-family: 'Poppins', sans-serif;
             font-size: 5.5vw; 
-            font-weight: 500;
+            font-weight: 600; /* 太さを調整 */
             color: var(--slate-gray);
             margin-left: 1.5vw;
             opacity: 0.8;
-            /* 幅を固定して動かないようにする */
-            min-width: 7vw;
+            /* 幅を固定して文字ブレを防ぐ */
+            width: 7.5vw; 
             text-align: left;
+            /* 等幅数字機能 */
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
         }
 
-        /* === 右側：天気エリア (35%) === */
+        /* === 右側：天気エリア (37%) === */
         .weather-container {
-            width: 37%; /* 少し広げる */
+            width: 37%; 
             height: 75%; 
             display: flex;
             flex-direction: column;
             justify-content: space-between; 
             padding-left: 3vw; 
-            border-left: 4px solid var(--ink-black); /* 線を太く */
+            border-left: 4px solid var(--ink-black);
             color: var(--ink-black);
             animation: fadeIn 2s ease-out;
         }
 
-        /* --- 上段：メイン天気 --- */
         .weather-top {
             display: flex;
             align-items: center;
@@ -149,7 +153,7 @@
         }
 
         .current-icon {
-            width: 12vw; /* アイコン拡大 */
+            width: 12vw;
             height: 12vw;
             padding: 0;
             flex-shrink: 0;
@@ -162,23 +166,22 @@
             height: 100%;
         }
 
-        /* SHIBATA / TODAY 表示エリア */
         .location-row {
             display: flex;
-            flex-direction: column; /* 縦並びに変更 */
+            flex-direction: column;
             margin-bottom: 0.5vh;
             line-height: 1.2;
         }
 
         .location-name {
-            font-size: 1.4vw; /* 拡大 */
+            font-size: 1.4vw;
             font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
 
         .day-label {
-            font-size: 1.1vw; /* 新設：TODAY/TOMORROW */
+            font-size: 1.1vw;
             font-weight: 700;
             color: var(--ink-black);
             background: rgba(0,0,0,0.08);
@@ -195,7 +198,7 @@
         }
 
         .main-temp {
-            font-size: 8.5vw; /* 拡大 */
+            font-size: 8.5vw;
             font-weight: 800;
             line-height: 1;
             letter-spacing: -0.05em;
@@ -211,7 +214,7 @@
         }
 
         .hl-temp {
-            font-size: 2.8vw; /* 拡大 */
+            font-size: 2.8vw;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
         }
@@ -220,7 +223,6 @@
             color: var(--slate-gray);
         }
 
-        /* 区切り線 */
         .divider-horizontal {
             width: 100%;
             height: 4px;
@@ -230,12 +232,11 @@
             margin: 1vh 0;
         }
 
-        /* --- 下段：時間ごとの天気 --- */
         .weather-bottom {
             height: 35%;
             display: flex;
             justify-content: space-between; 
-            align-items: flex-end; /* 下揃え */
+            align-items: flex-end;
             padding-bottom: 1vh;
         }
 
@@ -248,19 +249,20 @@
         }
 
         .hourly-icon {
-            width: 4.5vw; /* 拡大 */
+            width: 4.5vw;
             height: 4.5vw;
         }
 
         .hourly-time {
-            font-size: 1.3vw; /* 拡大 */
+            font-size: 1.3vw;
             font-weight: 700;
             color: var(--slate-gray);
-            font-family: 'Roboto Mono', monospace;
+            /* 時間も等幅にしておく */
+            font-variant-numeric: tabular-nums;
         }
 
         .hourly-temp {
-            font-size: 2vw; /* 拡大 */
+            font-size: 2vw;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
         }
@@ -331,7 +333,6 @@
                         <span class="separator">:</span>
                         <span id="minutes">00</span>
                     </div>
-                    <!-- 秒数：ガタつき防止適用済み -->
                     <div class="seconds" id="seconds">00</div>
                 </div>
             </div>
@@ -339,14 +340,12 @@
 
         <!-- 右側：天気 -->
         <div class="weather-container">
-            
             <!-- 上段 -->
             <div class="weather-top">
                 <div class="current-icon" id="main-icon"></div>
                 <div class="current-details">
                     <div class="location-row">
                         <span class="location-name">SHIBATA</span>
-                        <!-- TODAY / TOMORROW ラベル -->
                         <span class="day-label" id="weather-label">TODAY</span>
                     </div>
                     <div class="temp-row">
@@ -361,16 +360,14 @@
 
             <div class="divider-horizontal"></div>
 
-            <!-- 下段：時間別 -->
+            <!-- 下段 -->
             <div class="weather-bottom" id="hourly-forecast">
-                <!-- JSで生成 -->
                 <div class="hourly-item"><span class="hourly-time">6</span></div>
                 <div class="hourly-item"><span class="hourly-time">9</span></div>
                 <div class="hourly-item"><span class="hourly-time">12</span></div>
                 <div class="hourly-item"><span class="hourly-time">15</span></div>
                 <div class="hourly-item"><span class="hourly-time">18</span></div>
             </div>
-
         </div>
     </div>
 
@@ -382,7 +379,7 @@
         function setupManifest() {
             const iconData = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f4f4f4'/%3E%3Ccircle cx='256' cy='256' r='200' fill='none' stroke='%231a1a1a' stroke-width='40'/%3E%3Cline x1='256' y1='256' x2='256' y2='100' stroke='%231a1a1a' stroke-width='30' stroke-linecap='round'/%3E%3Cline x1='256' y1='256' x2='380' y2='256' stroke='%23666666' stroke-width='20' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='256' r='20' fill='%231a1a1a'/%3E%3C/svg%3E";
             const manifest = {
-                "name": "Monotone Clock",
+                "name": "Monotone Clock v2",
                 "short_name": "Clock",
                 "start_url": ".",
                 "display": "fullscreen",
@@ -426,8 +423,6 @@
             document.getElementById('minutes').textContent = m;
             document.getElementById('seconds').textContent = s;
             document.getElementById('progress').style.width = `${progressPercent}%`;
-            
-            // 毎分00秒のタイミングで天気の表示モード（TODAY/TOMORROW）をチェックするトリガーとしても機能
         }
 
         const API_URL = "https://api.open-meteo.com/v1/forecast?latitude=37.9485&longitude=139.3297&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code&timezone=Asia%2FTokyo";
@@ -457,34 +452,26 @@
                 const response = await fetch(API_URL);
                 const data = await response.json();
 
-                // 19時以降かどうか判定
                 const currentHour = new Date().getHours();
                 const isTomorrowMode = currentHour >= 19;
 
-                // --- 表示ラベルとターゲット日のインデックス ---
                 const labelText = isTomorrowMode ? "TOMORROW" : "TODAY";
-                const dailyIndex = isTomorrowMode ? 1 : 0; // 今日=0, 明日=1
+                const dailyIndex = isTomorrowMode ? 1 : 0;
                 
                 document.getElementById('weather-label').textContent = labelText;
 
-                // --- メイン部分 (気温・アイコン) ---
                 const daily = data.daily;
                 const maxT = Math.round(daily.temperature_2m_max[dailyIndex]);
                 const minT = Math.round(daily.temperature_2m_min[dailyIndex]);
 
-                // メインの大きな数字
                 let mainDisplayTemp;
                 let mainDisplayIcon;
 
                 if (isTomorrowMode) {
-                    // 明日モードなら「明日の最高気温」をメインに
                     mainDisplayTemp = maxT;
-                    // 明日の天気コード（daily.weather_code[1]）
                     mainDisplayIcon = getWeatherDetails(daily.weather_code[1]).icon;
                 } else {
-                    // 今日モードなら「現在の気温」をメインに
                     mainDisplayTemp = Math.round(data.current.temperature_2m);
-                    // 現在の天気コード
                     mainDisplayIcon = getWeatherDetails(data.current.weather_code).icon;
                 }
 
@@ -493,23 +480,16 @@
                 document.getElementById('max-temp').textContent = maxT + "°";
                 document.getElementById('min-temp').textContent = minT + "°";
 
-                // --- 時間別 (6, 9, 12, 15, 18) ---
                 const hourlyContainer = document.getElementById('hourly-forecast');
                 hourlyContainer.innerHTML = ''; 
 
                 const targetHours = [6, 9, 12, 15, 18];
-                
-                // Open-Meteoのhourlyは0時から始まる配列
-                // 今日ならそのままindex=hour, 明日ならindex=hour+24
                 const offset = isTomorrowMode ? 24 : 0;
-
                 const hourlyTemps = data.hourly.temperature_2m;
                 const hourlyCodes = data.hourly.weather_code;
 
                 targetHours.forEach(hour => {
                     const index = hour + offset;
-                    
-                    // 配列範囲外チェック（念のため）
                     if (index < hourlyTemps.length) {
                         const temp = Math.round(hourlyTemps[index]);
                         const code = hourlyCodes[index];
@@ -534,10 +514,7 @@
         setupManifest();
         setInterval(updateClock, 30);
         updateClock();
-        
-        // 初回実行
         fetchWeather();
-        // 5分ごとに更新 (300,000ms)
         setInterval(fetchWeather, 300000); 
     </script>
 </body>
